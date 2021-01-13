@@ -6,22 +6,24 @@ import pandas as pd
 
 from gsheetsdb import connect
 
-st.title("2021 Engineering OKRs")
+st.title("2021 Engineering OKR Brainstorm")
 
-secret_url = st.secrets["SECRET_URL"]
-with st.beta_expander('Secret value'):
-    secret_url
+pw = st.text_input('What is the secret password?')
+if pw == st.secrets["SECRET_PASSWORD"]:
+    secret_url = st.secrets["SECRET_URL"]
+    with st.beta_expander('Secret value'):
+        secret_url
 
-conn = connect()
-result = conn.execute(f'SELECT Category, Description FROM "{secret_url}"', headers=1)
+    conn = connect()
+    result = conn.execute(f'SELECT Category, Description FROM "{secret_url}"', headers=1)
 
-df = pd.DataFrame(list(result), columns=['Category', 'Description'])
-with st.beta_expander('Raw data'):
-    st.table(df)
+    df = pd.DataFrame(list(result), columns=['Category', 'Description'])
+    with st.beta_expander('Raw data'):
+        st.table(df)
 
-st.subheader("Count by category")
-st.bar_chart(df.groupby("Category").count())
+    st.subheader("Count by category")
+    st.bar_chart(df.groupby("Category").count())
 
-st.subheader("Word frequency")
-freq = pd.Series(' '.join(df.Description).split()).value_counts()[:25]
-st.bar_chart(freq)
+    st.subheader("Word frequency")
+    freq = pd.Series(' '.join(df.Description).split()).value_counts()[:25]
+    st.bar_chart(freq)

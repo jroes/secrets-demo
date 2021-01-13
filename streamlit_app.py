@@ -5,18 +5,13 @@ import time
 import streamlit as st
 import os
 import os.path
+import secrets_beta
 
 from gsheetsdb import connect
 
 st.title("Hello!")
 
-try:
-    with open(".streamlit/secrets.toml") as f:
-        st.text(f.read())
-except FileNotFoundError:
-    st.text('No secrets file found, probably not ready yet, or running locally!')
-
-secret_url = os.environ['SECRET_URL']
+secret_url = st.secrets["SECRET_URL"]
 secret_url
 
 conn = connect()

@@ -6,24 +6,19 @@ import pandas as pd
 
 from gsheetsdb import connect
 
-st.title("2021 Engineering OKR Brainstorm")
-
-pw = st.text_input('What is the secret password?')
-if pw == st.secrets["SECRET_PASSWORD"]:
-    secret_url = st.secrets["SECRET_URL"]
-    with st.beta_expander('Secret value'):
-        secret_url
-
+def download_spreadsheet(url):
     conn = connect()
-    result = conn.execute(f'SELECT Category, Description FROM "{secret_url}"', headers=1)
+    result = conn.execute(f'SELECT * FROM "{url}"', headers=1)
+    return pd.DataFrame(list(result))
 
-    df = pd.DataFrame(list(result), columns=['Category', 'Description'])
-    with st.beta_expander('Raw data'):
-        st.table(df)
+st.title("[Secrets Demo] Nuclear Launch Codes")
 
-    st.subheader("Count by category")
-    st.bar_chart(df.groupby("Category").count())
+password = st.text_input('What is the secret password?')
+if password == st.secrets["SECRET_PASSWORD"]:
+    secret_url = st.secrets["SECRET_URL"]
 
-    st.subheader("Word frequency")
-    freq = pd.Series(' '.join(df.Description).split()).value_counts()[:25]
-    st.bar_chart(freq)
+    st.subheader("Codes")
+    st.write(download_spreadsheet(secret_url))
+
+    if st.button("Launch"):
+        st.balloons()

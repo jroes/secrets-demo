@@ -11,7 +11,7 @@ def download_spreadsheet(url):
     result = conn.execute(f'SELECT * FROM "{url}"', headers=1)
     return pd.DataFrame(list(result))
 
-st.title("[Secrets Demo] Nuclear Launch Codes")
+st.title("☢️ Nuclear Launch Codes")
 
 password = st.text_input('What is the secret password?')
 if password == st.secrets["SECRET_PASSWORD"]:
